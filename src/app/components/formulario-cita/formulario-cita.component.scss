@@ -1,0 +1,37 @@
+.form-row {
+  margin-bottom: 15px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.spinner-button {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.limit-warning {
+  display: flex;
+  align-items: center;
+  background-color: #fff4e5;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+}
