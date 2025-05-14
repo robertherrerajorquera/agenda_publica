@@ -1,49 +1,60 @@
 import { Component, Inject, type OnInit } from "@angular/core"
-import { FormBuilder, type FormGroup, ReactiveFormsModule, Validators } from "@angular/forms"
-import { MAT_DIALOG_DATA,  MatDialogRef } from "@angular/material/dialog"
-import type { Citas } from "../../models/citas";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog"
+
+import type { Citas } from "../../models/citas"
+import { CitaFormularioComponent } from "../cita-formulario/cita-formulario.component"
+import { MatSnackBar } from "@angular/material/snack-bar"
+import { LimitesService } from "../../services/limites.service"
+import { GoogleCalendarService } from "../../services/google-calendar.service"
+
+
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { GoogleCalendarService } from "../../services/google-calendar.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LimitesService } from '../../services/limites.service';
-import { NgIf } from '@angular/common';
-
+import { CommonModule, NgIf } from '@angular/common';
 @Component({
-  selector: 'app-formulario-cita',
-  imports: [ReactiveFormsModule, MatIconModule, MatDialogModule, MatFormFieldModule, MatDatepickerModule, MatProgressSpinnerModule, NgIf],
-  templateUrl: './formulario-cita.component.html',
-  styleUrl: './formulario-cita.component.scss'
+  selector: 'app-cita-detalle',
+  imports: [MatIconModule, MatDialogModule, MatFormFieldModule, MatDatepickerModule, MatProgressSpinnerModule, NgIf, CommonModule],
+  templateUrl: './cita-detalle.component.html',
+  styleUrl: './cita-detalle.component.scss'
 })
-export class FormularioCitaComponent {
+export class CitaDetalleComponent {
+
   citaForm: FormGroup
   isNew: boolean
   isSubmitting = false
   dailyLimitReached = false;
 
   constructor(
-   private fb: FormBuilder,
-    private dialogRef: MatDialogRef<FormularioCitaComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { isNew: boolean, appointment?: Citas },
+    private fb: FormBuilder,
+    private dialogRef: MatDialogRef<CitaFormularioComponent>,
     private calendarService: GoogleCalendarService,
     private snackBar: MatSnackBar,
-    private dailyLimitService: LimitesService
+    private dailyLimitService: LimitesService,
+    @Inject(MAT_DIALOG_DATA) public data: { isNew: boolean; Cita?: Citas }
   ) {
-  this.isNew = data.isNew;
+    this.isNew = data.isNew;
     this.citaForm = this.createForm();
   }
 
-    ngOnInit() {
-    if (!this.isNew && this.data.appointment) {
-      this.populateForm(this.data.appointment)
+  ngOnInit() {
+    if (!this.isNew && this.data.Cita) {
+      this.populateForm(this.data.Cita)
     }
+
 
     if (this.isNew) {
       this.checkDailyLimit()
     }
+  }
+
+
+  close(): void {
+    this.dialogRef.close();
   }
 
   createForm(): FormGroup {
@@ -59,7 +70,7 @@ export class FormularioCitaComponent {
     })
   }
 
-    populateForm(Cita: Citas) {
+  populateForm(Cita: Citas) {
     const startDate = new Date(Cita.start)
     const endDate = new Date(Cita.end)
 
@@ -75,6 +86,7 @@ export class FormularioCitaComponent {
     })
   }
 
+
   formatTime(date: Date): string {
     const hours = date.getHours().toString().padStart(2, "0")
     const minutes = date.getMinutes().toString().padStart(2, "0")
@@ -82,7 +94,7 @@ export class FormularioCitaComponent {
   }
 
   checkDailyLimit() {
-    this.dailyLimitService.getDailyCount().subscribe((count:number) => {
+    this.dailyLimitService.getDailyCount().subscribe((count) => {
       this.dailyLimitReached = count >= 300
       if (this.dailyLimitReached) {
         this.showMessage("Se ha alcanzado el límite diario de 300 citas")
@@ -114,7 +126,7 @@ export class FormularioCitaComponent {
     endDate.setHours(endHours, endMinutes, 0)
 
     const CitaData: Citas = {
-      id: this.isNew ? undefined : this.data.appointment?.id,
+      id: this.isNew ? undefined : this.data.Cita?.id,
       summary: `Cita: ${formValues.nombre}`,
       description: formValues.notes,
       start: startDate.toISOString(),
@@ -136,15 +148,16 @@ export class FormularioCitaComponent {
     }
   }
 
-    createAppointment(CitaData: Citas) {
-    this.calendarService.createEvent(CitaData).subscribe({
+
+  createAppointment(Cita: Citas) {
+    this.calendarService.createEvent(Cita).subscribe({
       next: (result) => {
         this.isSubmitting = false
         this.dailyLimitService.incrementDailyCount()
         this.dialogRef.close(result)
       },
-      error: (error: any) => {
-        console.error("Error creating appointment", error)
+      error: (error) => {
+        console.error("Error creating Citas", error)
         this.showMessage("Error al crear la cita")
         this.isSubmitting = false
       },
@@ -153,11 +166,11 @@ export class FormularioCitaComponent {
 
   updateAppointment(CitaData: Citas) {
     this.calendarService.updateEvent(CitaData).subscribe({
-      next: (result:any) => {
+      next: (result) => {
         this.isSubmitting = false
         this.dialogRef.close(result)
       },
-      error: (error:any) => {
+      error: (error) => {
         console.error("Error updating appointment", error)
         this.showMessage("Error al actualizar la cita")
         this.isSubmitting = false

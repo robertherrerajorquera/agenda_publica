@@ -1,0 +1,39 @@
+<h2 mat-dialog-title>Detalles de la Cita</h2>
+<mat-dialog-content>
+  <div class="details-container">
+    <div class="detail-item">
+      <span class="detail-label">Nombre:</span>
+      <span class="detail-value">{{ data.Cita?.extendedProperties?.private?.nombre || 'No especificado' }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="detail-label">RUT:</span>
+      <span class="detail-value">{{ data.Cita?.extendedProperties?.private?.rut || 'No especificado' }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="detail-label">Teléfono:</span>
+      <span class="detail-value">{{ data.Cita?.extendedProperties?.private?.cel || 'No especificado' }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="detail-label">Email:</span>
+      <span class="detail-value">{{ data.Cita?.extendedProperties?.private?.correo || 'No especificado' }}</span>
+    </div>
+
+    <div class="detail-item">
+      <span class="detail-label">Fecha y hora:</span>
+      <span class="detail-value">
+        {{ data.Cita?.start | date:'dd/MM/yyyy HH:mm' }} - {{ data.Cita?.end | date:'HH:mm' }}
+      </span>
+    </div>
+
+    <div class="detail-item" *ngIf="data.Cita?.description">
+      <span class="detail-label">Notas:</span>
+      <span class="detail-value notes">{{ data.Cita?.description }}</span>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cerrar</button>
+</mat-dialog-actions>

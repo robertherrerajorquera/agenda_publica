@@ -2,7 +2,6 @@
 import { Component, type OnInit } from "@angular/core"
 import  { MatDialog } from "@angular/material/dialog"
 import  { MatSnackBar } from "@angular/material/snack-bar"
-import { FormularioCitaComponent } from "./components/formulario-cita/formulario-cita.component"
 import  { GoogleCalendarService } from "./services/google-calendar.service"
 import  { ConfigService } from "./services/config.service"
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -10,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgIf } from '@angular/common';
+import { CitaFormularioComponent } from "./components/cita-formulario/cita-formulario.component"
 
 @Component({
   selector: 'app-root',
@@ -52,7 +52,7 @@ export class AppComponent {
   }
 
   openNewAppointmentDialog() {
-    const dialogRef = this.dialog.open(FormularioCitaComponent, {
+    const dialogRef = this.dialog.open(CitaFormularioComponent, {
       width: "600px",
       data: { isNew: true },
     })
