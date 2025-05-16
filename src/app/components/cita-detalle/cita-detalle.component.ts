@@ -115,7 +115,6 @@ export class CitaDetalleComponent {
     this.isSubmitting = true
     const formValues = this.citaForm.value
 
-    // Create date objects for start and end times
     const startDate = new Date(formValues.date)
     const endDate = new Date(formValues.date)
 

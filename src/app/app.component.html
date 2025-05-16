@@ -10,6 +10,14 @@
     >
       <mat-icon>add</mat-icon> Nueva Cita
     </button>
+    <button
+      mat-icon-button
+      (click)="clearConfiguration()"
+      *ngIf="isConfigured"
+      matTooltip="Borrar configuración"
+    >
+      <mat-icon>settings</mat-icon>
+    </button>
   </mat-toolbar>
 
   <div class="content-container">
@@ -25,15 +33,30 @@
         </mat-card-header>
         <mat-card-content>
           <p>Para utilizar el sistema de agenda, es necesario configurar la API de Google Calendar.</p>
-          <p>Por favor, configure los siguientes parámetros en el archivo de configuración:</p>
-          <ul>
-            <li>API Key de Google</li>
-            <li>ID del Calendario</li>
-          </ul>
+
+          <form (ngSubmit)="saveConfiguration()" #configForm="ngForm" class="config-form">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>API Key de Google</mat-label>
+              <input matInput [(ngModel)]="apiKey" name="apiKey" required>
+              <mat-hint>Ingrese su API Key de Google Calendar</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>ID del Calendario</mat-label>
+              <input matInput [(ngModel)]="calendarId" name="calendarId" required>
+              <mat-hint>Usa 'primary' para tu calendario principal o el ID específico del calendario</mat-hint>
+            </mat-form-field>
+
+            <div class="button-container">
+              <button mat-raised-button color="primary" type="submit" [disabled]="!configForm.form.valid">
+                Guardar Configuración
+              </button>
+            </div>
+          </form>
         </mat-card-content>
       </mat-card>
     </div>
 
-
+    <app-calendario *ngIf="!isLoading && isConfigured"></app-calendario>
   </div>
 </div>

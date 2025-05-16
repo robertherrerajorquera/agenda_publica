@@ -94,14 +94,14 @@
 
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close type="button" [disabled]="isSubmitting">Cancelar</button>
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      [disabled]="citaForm.invalid || isSubmitting || (dailyLimitReached && isNew)"
-    >
-      <mat-spinner *ngIf="isSubmitting" diameter="20" class="spinner-button"></mat-spinner>
-      <span *ngIf="!isSubmitting">{{ isNew ? 'Agendar' : 'Actualizar' }}</span>
-    </button>
+ <button
+  mat-raised-button
+  color="primary"
+  type="submit"
+  [disabled]="isSubmitting || (dailyLimitReached && isNew)"
+>
+  <mat-spinner *ngIf="isSubmitting" diameter="20" class="spinner-button"></mat-spinner>
+  <span *ngIf="!isSubmitting">{{ isNew ? 'Agendar' : 'Actualizar' }}</span>
+</button>
   </mat-dialog-actions>
 </form>

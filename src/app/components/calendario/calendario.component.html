@@ -1,1 +1,61 @@
-<p>calendario works!</p>
+<div class="calendar-container">
+  <div class="calendar-header">
+    <mat-card>
+      <mat-card-content>
+        <div class="date-selector">
+          <mat-form-field appearance="fill">
+            <mat-label>Seleccionar fecha</mat-label>
+            <input matInput [matDatepicker]="picker" [value]="selectedDate" (dateChange)="onDateChange($event)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="daily-limit-info">
+          <p>Citas creadas hoy: {{ dailyCount }} / {{ dailyLimit }}</p>
+          <mat-progress-bar
+            mode="determinate"
+            [value]="(dailyCount / dailyLimit) * 100"
+            [color]="dailyCount >= dailyLimit ? 'warn' : 'primary'"
+          ></mat-progress-bar>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="appointments-container">
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="!isLoading && appointments.length === 0" class="no-appointments">
+      <p>No hay citas programadas para esta fecha</p>
+    </div>
+
+    <mat-card *ngFor="let appointment of appointments" class="appointment-card">
+      <mat-card-header>
+        <mat-card-title>{{ appointment.summary }}</mat-card-title>
+        <mat-card-subtitle>
+          {{ appointment.start | date:'dd/MM/yyyy HH:mm' }} - {{ appointment.end | date:'HH:mm' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Nombre:</strong> {{ appointment.extendedProperties?.private?.nombre || 'No especificado' }}</p>
+        <p><strong>RUT:</strong> {{ appointment.extendedProperties?.private?.rut || 'No especificado' }}</p>
+        <p><strong>Teléfono:</strong> {{ appointment.extendedProperties?.private?.cel || 'No especificado' }}</p>
+        <p><strong>Email:</strong> {{ appointment.extendedProperties?.private?.correo || 'No especificado' }}</p>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button color="primary" (click)="viewAppointment(appointment)">
+          <mat-icon>visibility</mat-icon> Ver
+        </button>
+        <button mat-button color="accent" (click)="editAppointment(appointment)">
+          <mat-icon>edit</mat-icon> Editar
+        </button>
+        <button mat-button color="warn" (click)="deleteAppointment(appointment)">
+          <mat-icon>delete</mat-icon> Eliminar
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

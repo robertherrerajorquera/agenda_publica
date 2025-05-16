@@ -18,7 +18,6 @@ export class LimitesService {
     const storedDate = localStorage.getItem(this.DATE_KEY)
     const today = new Date().toDateString()
 
-    // Reset count if it's a new day
     if (storedDate !== today) {
       localStorage.setItem(this.DATE_KEY, today)
       localStorage.setItem(this.STORAGE_KEY, "0")

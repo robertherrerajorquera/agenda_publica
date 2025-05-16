@@ -49,18 +49,18 @@ export class CitaFormularioComponent {
   }
 
 
-  createForm(): FormGroup {
-    return this.fb.group({
-      nombre: ["", [Validators.required]],
-      rut: ["", [Validators.required, Validators.pattern(/^[0-9]{1,2}[.][0-9]{3}[.][0-9]{3}[-][0-9kK]{1}$/)]],
-      cel: ["", [Validators.required, Validators.pattern(/^[+]?[0-9]{9,12}$/)]],
-      correo: ["", [Validators.required, Validators.email]],
-      date: [new Date(), [Validators.required]],
-      startTime: ["09:00", [Validators.required]],
-      endTime: ["10:00", [Validators.required]],
-      notes: [""],
-    })
-  }
+ createForm(): FormGroup {
+  return this.fb.group({
+    name: ["", [Validators.required]],
+    rut: ["", [Validators.required]],
+    phone: ["", [Validators.required]],
+    email: ["", [Validators.required, Validators.email]],
+    date: [new Date(), [Validators.required]],
+    startTime: ["09:00", [Validators.required]],
+    endTime: ["10:00", [Validators.required]],
+    notes: [""],
+  });
+}
 
   populateForm(Cita: Citas) {
     const startDate = new Date(Cita.start)
@@ -107,7 +107,6 @@ export class CitaFormularioComponent {
     this.isSubmitting = true
     const formValues = this.citaForm.value
 
-    // Create date objects for start and end times
     const startDate = new Date(formValues.date)
     const endDate = new Date(formValues.date)
 
